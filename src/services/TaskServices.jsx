@@ -16,11 +16,11 @@ const taskServices =  {
           throw new Error('Failed to fetch tasks');
         }
       },
-    async addTask() {
+    async addTask(taskData) {
         try {
-            console.log("Before API Call post");
-          const response = await api.post('/api/v1/tasks');
-          console.log("after API Call post");
+            console.log("Before API Call post",taskData);
+          const response = await api.post('/api/v1/tasks', taskData);
+          console.log("after API Call post", taskData);
           return response.data;
         } catch (error) {
           console.error(`Error adding tasks: ${error.message}`);

@@ -4,12 +4,7 @@ import TaskList from "../assets/components/TaskList";
 
 
 const TaskPage = () => {
-    // const [checkData, setCheck]=useState([])
-    // useEffect(()=>{
-    //     fetch('http://localhost:8000/api/v1/tasks/')
-    //     .then(res=>res.json())
-    //     .then(data=>console.log('datallll', data))
-    // },[])
+ 
     const [tasks, setTasks] = useState([]);
 
     const handleAddTask = (newTask) => {
