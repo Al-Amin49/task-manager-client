@@ -11,8 +11,8 @@ const TaskPage = () => {
       setTasks((prevTasks) => [...prevTasks, newTask]);
     };
     return (
-        <div className="max-w-sm mx-auto">
-            <h3 className="my-10 text-center">Task To do</h3>
+        <div className="max-w-sm mx-auto my-2">
+          
            <TaskForm onAddTask={handleAddTask}/>
            <TaskList />
         </div>
