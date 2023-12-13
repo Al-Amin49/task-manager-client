@@ -1,11 +1,39 @@
+import { useState } from "react";
+import taskServices from "../../services/TaskServices";
 
 
 
-const TaskForm = () => {
+const TaskForm = ({onAddTask}) => {
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [dueDate, setDueDate] = useState('');
+  const [status, setStatus] = useState('Not Started');
+  const handleAddTask = async (e) => {
+    e.preventDefault()
+    try {
+      const newTask = await taskServices.addTask({
+        title,
+        description,
+        dueDate,
+        status,
+      });
+
+      onAddTask(newTask); 
+      alert("addd task into db")
+      // Clear the form fields after successful submission
+      setTitle('');
+      setDescription('');
+      setDueDate('');
+      setStatus('Not Started');
+    } catch (error) {
+      console.error('Error adding task:', error.message);
+    }
+  };
+
     return (
       <div>
         <div className="bg-green-200 p-4">
-          <form className="w-full max-w-lg">
+          <form onSubmit={handleAddTask} className="w-full max-w-lg">
             <div className="flex flex-wrap -mx-3 mb-6">
               <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                 <label
@@ -19,6 +47,8 @@ const TaskForm = () => {
                   id="grid-first-name"
                   type="text"
                   placeholder="title"
+                  value={title}
+                  onChange={(e)=>setTitle(e.target.value)}
                 />
               </div>
               <div className="w-full md:w-1/2 px-3">
@@ -32,6 +62,8 @@ const TaskForm = () => {
                   className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                   id="grid-last-name"
                   placeholder="Enter task description..."
+                  value={description}
+                  onChange={(e)=>setDescription(e.target.value)}
                 />
               </div>
             </div>
@@ -48,6 +80,8 @@ const TaskForm = () => {
          
           <select 
               className=" block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+              value={status}
+            onChange={(e)=>setStatus(e.target.value)}
           >
             <option value="Not Started">Not Started</option>
             <option value="In Progress">In Progress</option>
@@ -66,6 +100,8 @@ const TaskForm = () => {
                   className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                   id="grid-last-name"
                   type="date"
+                  value={dueDate}
+                  onChange={(e)=>setDueDate(e.target.value)}
                 />
               </div>
             </div>
@@ -74,7 +110,8 @@ const TaskForm = () => {
             <div className="text-center">
               <button
                 className="bg-blue-500 hover:bg-blue-700 text-center text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                type="button"
+                type="submit"
+               
               >
                 Add Task
               </button>
