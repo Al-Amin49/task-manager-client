@@ -4,11 +4,31 @@ import taskServices from "../../services/TaskServices";
 import { FaEdit } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
 import toast from "react-hot-toast";
+import Loading from "./Loading";
 const TaskList = ({ todos }) => {
+
   const [tasks, setTasks] = useState([]);
   const [editedTask, setEditedTask] = useState(null);
   const [isEditing, setIsEditing] = useState({});
-  const [completedTasks, setCompletedTasks] = useState({});
+
+
+  //completed tasks
+  const totalCompletedTasks= tasks.filter((task)=>task.completed===true).length
+  const totalTask= tasks.length
+
+  const getMessage=()=>{
+    const percentage= totalTask ===0 ? 'Your daily deeds start here.': (totalCompletedTasks/totalTask)*100;
+    if(percentage===0){
+      return 'Try to do at least one 🤲'
+    }
+    if(percentage===100){
+      return 'Nice Job for today 👏'
+    }
+    return 'Keep it going 💪🏻';
+  }
+  getMessage()
+
+  //formatted data dd/mm/year
   const formatDate = (dateString) => {
     const options = { day: "numeric", month: "numeric", year: "numeric" };
     const formattedDate = new Date(dateString).toLocaleDateString(
@@ -38,15 +58,10 @@ const TaskList = ({ todos }) => {
         description: editedTask.description,
         dueDate: editedTask.dueDate,
         status: editedTask.status,
+        completed: editedTask.status === 'Completed'
       });
       // reset isediting for all task
       setIsEditing({});
-
-      // Set completion status for the updated task
-      setCompletedTasks((prevCompleted) => ({
-        ...prevCompleted,
-        [editedTask._id]: editedTask.status === "Completed",
-      }));
 
       // fetch the updated tasks
       const updatedTasks = await taskServices.getTasks();
@@ -65,7 +80,7 @@ const TaskList = ({ todos }) => {
 
       // Update the task list after deletion
       const updatedTasks = await taskServices.getTasks();
-      setTasks(updatedTasks.tasks || []);
+      setTasks(updatedTasks.tasks);
       toast.success("Task deleted successfully");
     } catch (error) {
       console.error("Error deleting task:", error.message);
@@ -77,26 +92,21 @@ const TaskList = ({ todos }) => {
     const fetchTasks = async () => {
       try {
         const fetchedTasks = await taskServices.getTasks();
-        console.log("fetchedTasks", fetchedTasks);
-
-        const completedTasksData = fetchedTasks.tasks.reduce((acc, task) => {
-          acc[task._id] = task.completed || false;
-          return acc;
-        }, {});
-        console.log('total completed', completedTasksData)
-
-        setCompletedTasks(completedTasksData);
-        setTasks(fetchedTasks.tasks || []);
+        setTasks(fetchedTasks.tasks);
       } catch (error) {
         console.error("Error fetching tasks:", error.message);
-        setTasks([]); // Set an empty array in case of an error
+        setTasks([]); 
       }
     };
     fetchTasks();
   }, [todos]);
   return (
     <div>
-      {Array.isArray(tasks) ? (
+       <div className="text-center my-4">
+        <h1>{totalCompletedTasks}/{totalTask} complete</h1>
+        <p className="text-lg text-gray-600">{getMessage()}</p>
+      </div>
+      {Array.isArray(tasks) && tasks.length>0 ? (
         tasks.map((task) => (
           <div key={task._id} className="border p-4 my-2 rounded-md">
             {isEditing[task._id] && editedTask ? (
@@ -191,7 +201,7 @@ const TaskList = ({ todos }) => {
                     Due Date: {formatDate(task.dueDate)}
                   </p>
                   <p className="text-green-500">
-                    Completed: {completedTasks[task._id] ? 'Yes' : 'No'}
+                    Completed: {task.completed ? 'Yes' : 'No'}
                   </p>
                 </div>
                 <div className="flex mt-2">
@@ -211,6 +221,7 @@ const TaskList = ({ todos }) => {
       ) : (
         <p>No tasks available</p>
       )}
+     
     </div>
   );
 };

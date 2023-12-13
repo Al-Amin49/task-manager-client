@@ -11,10 +11,12 @@ const TaskPage = () => {
       setTodos((prevTasks) => [...prevTasks, newTask]);
     };
     return (
-        <div className="max-w-sm mx-auto my-2">
-          
+        <div className="max-w-screen-xl mx-auto ">
+             <h3 className="text-center mt-4 text-3xl text-green-500 font-medium"> Your Daily deed starts here 🌟</h3>
+           <div className="flex justify-around items-center">
            <TaskForm onAddTask={handleAddTask}/>
            <TaskList todos={todos} />
+           </div>
         </div>
     );
 };
