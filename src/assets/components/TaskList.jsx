@@ -18,6 +18,9 @@ const TaskList = ({ todos }) => {
 
   const getMessage=()=>{
     const percentage= totalTask ===0 ? 'Your daily deeds start here.': (totalCompletedTasks/totalTask)*100;
+    if(totalCompletedTasks ===0 && totalTask===0){
+      return ''
+    }
     if(percentage===0){
       return 'Try to do at least one 🤲'
     }
@@ -103,8 +106,8 @@ const TaskList = ({ todos }) => {
   return (
     <div>
        <div className="text-center my-4">
-        <h1>{totalCompletedTasks}/{totalTask} complete</h1>
-        <p className="text-lg text-gray-600">{getMessage()}</p>
+        <h1 className="text-3xl">{totalCompletedTasks}/{totalTask} complete</h1>
+        <p className="text-2xl text-gray-600" >{getMessage()}</p>
       </div>
       {Array.isArray(tasks) && tasks.length>0 ? (
         tasks.map((task) => (
@@ -219,7 +222,7 @@ const TaskList = ({ todos }) => {
           </div>
         ))
       ) : (
-        <p>No tasks available</p>
+        <p className="text-xl ">No tasks available. Enjoy your free time! 😊</p>
       )}
      
     </div>
