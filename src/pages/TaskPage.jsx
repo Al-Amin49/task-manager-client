@@ -5,16 +5,16 @@ import TaskList from "../assets/components/TaskList";
 
 const TaskPage = () => {
  
-    const [tasks, setTasks] = useState([]);
+    const [todos, setTodos] = useState([]);
 
     const handleAddTask = (newTask) => {
-      setTasks((prevTasks) => [...prevTasks, newTask]);
+      setTodos((prevTasks) => [...prevTasks, newTask]);
     };
     return (
         <div className="max-w-sm mx-auto my-2">
           
            <TaskForm onAddTask={handleAddTask}/>
-           <TaskList />
+           <TaskList todos={todos} />
         </div>
     );
 };

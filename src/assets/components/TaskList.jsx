@@ -4,7 +4,7 @@ import { useState } from "react";
 import taskServices from "../../services/TaskServices";
 import { FaEdit } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
-const TaskList = () => {
+const TaskList = ({todos}) => {
   const [tasks, setTasks] = useState([]);
   const [editedTask, setEditedTask] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
@@ -23,16 +23,7 @@ const TaskList = () => {
   const handleCancelEdit = () => {
     setEditedTask(null);
   };
-  const fetchTasks = async () => {
-    try {
-      const fetchedTasks = await taskServices.getTasks();
-      console.log('fetchedTasks', fetchedTasks);
-      setTasks(fetchedTasks.tasks || []);
-    } catch (error) {
-      console.error('Error fetching tasks:', error.message);
-      setTasks([]); // Set an empty array in case of an error
-    }
-  };
+
 
   const handleUpdateTask = async () => {
     try {
@@ -66,7 +57,8 @@ const TaskList = () => {
       await taskServices.deleteTask(taskId);
 
       // Update the task list after deletion
-      fetchTasks();
+      const updatedTasks = await taskServices.getTasks();
+      setTasks(updatedTasks.tasks || []);
       setSuccessMessage('Task deleted successfully');
     } catch (error) {
       console.error('Error deleting task:', error.message);
@@ -75,8 +67,18 @@ const TaskList = () => {
   };
  
   useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const fetchedTasks = await taskServices.getTasks();
+        console.log('fetchedTasks', fetchedTasks);
+        setTasks(fetchedTasks.tasks || []);
+      } catch (error) {
+        console.error('Error fetching tasks:', error.message);
+        setTasks([]); // Set an empty array in case of an error
+      }
+    };
     fetchTasks();
-  }, []);
+  }, [todos]);
   return (
     <div>
     {successMessage &&  <p>{successMessage}</p>}
@@ -93,6 +95,7 @@ const TaskList = () => {
                   value={editedTask.title}
                   onChange={(e) => setEditedTask({ ...editedTask, title: e.target.value })}
                   className="mt-1 block w-full border rounded-md shadow-sm focus:ring focus:border-blue-300 sm:text-sm"
+                  required
                 />
               </div>
               <div className="mb-2">
@@ -102,6 +105,7 @@ const TaskList = () => {
         value={editedTask.description}
         onChange={(e) => setEditedTask({ ...editedTask, description: e.target.value })}
         className="mt-1 block w-full border rounded-md shadow-sm focus:ring focus:border-blue-300 sm:text-sm"
+        required
       />
     </div>
     <div className="mb-2">

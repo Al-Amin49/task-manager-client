@@ -1,5 +1,6 @@
 import { useState } from "react";
 import taskServices from "../../services/TaskServices";
+import toast from "react-hot-toast";
 
 
 
@@ -10,6 +11,11 @@ const TaskForm = ({onAddTask}) => {
   const [status, setStatus] = useState('Not Started');
   const handleAddTask = async (e) => {
     e.preventDefault()
+
+    if(!title || !description || !dueDate){
+      toast.error('Please Fill all require fields');
+      return;
+    }
     try {
       const newTask = await taskServices.addTask({
         title,
@@ -17,9 +23,9 @@ const TaskForm = ({onAddTask}) => {
         dueDate,
         status,
       });
-
+     
       onAddTask(newTask); 
-      alert("addd task into db")
+      toast.success('Successfully created!');
       // Clear the form fields after successful submission
       setTitle('');
       setDescription('');
