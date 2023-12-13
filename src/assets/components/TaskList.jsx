@@ -4,11 +4,11 @@ import { useState } from "react";
 import taskServices from "../../services/TaskServices";
 import { FaEdit } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
+import toast from "react-hot-toast";
 const TaskList = ({todos}) => {
   const [tasks, setTasks] = useState([]);
   const [editedTask, setEditedTask] = useState(null);
-  const [successMessage, setSuccessMessage] = useState(null);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState({});
   const formatDate = (dateString) => {
     const options = { day: 'numeric', month: 'numeric', year: 'numeric' };
     const formattedDate = new Date(dateString).toLocaleDateString(undefined, options);
@@ -17,18 +17,21 @@ const TaskList = ({todos}) => {
 
   const handleEditTask = (task) => {
     setEditedTask(task);
-    setIsEditing(true)
+    setIsEditing((prevEditing) => ({
+      ...prevEditing,
+      [task._id]: true, 
+    }));
   };
-
+// reset isEditing for all tasks
   const handleCancelEdit = () => {
     setEditedTask(null);
+    setIsEditing({}); 
   };
 
 
   const handleUpdateTask = async () => {
     try {
-      console.log('Updating task...');
-      
+
       await taskServices.updateTask(editedTask._id, {
         title: editedTask.title,
         description: editedTask.description,
@@ -36,19 +39,17 @@ const TaskList = ({todos}) => {
         status: editedTask.status,
       });
   
-      console.log('Task updated successfully');
+      // reset isediting for all task
+      setIsEditing({});
   
-      // Close the edit modal or reset the editing state
-      setIsEditing(false);
-  
-      // Optionally, you can fetch the updated tasks and set them
+      // fetch the updated tasks 
       const updatedTasks = await taskServices.getTasks();
       setTasks(updatedTasks.tasks || []);
   
-      setSuccessMessage('Task updated successfully');
+      toast.success('Task Updated Successfully')
     } catch (error) {
       console.error('Error updating task:', error.message);
-      setSuccessMessage('Failed to update task');
+      toast.error('Failed to update task');
     }
   };
  
@@ -59,10 +60,10 @@ const TaskList = ({todos}) => {
       // Update the task list after deletion
       const updatedTasks = await taskServices.getTasks();
       setTasks(updatedTasks.tasks || []);
-      setSuccessMessage('Task deleted successfully');
+      toast.success('Task deleted successfully');
     } catch (error) {
       console.error('Error deleting task:', error.message);
-      setSuccessMessage('Failed to delete task');
+      toast.error('Failed to delete task');
     }
   };
  
@@ -81,11 +82,10 @@ const TaskList = ({todos}) => {
   }, [todos]);
   return (
     <div>
-    {successMessage &&  <p>{successMessage}</p>}
     {Array.isArray(tasks) ? (
       tasks.map((task) => (
         <div key={task._id} className="border p-4 my-2 rounded-md">
-          {isEditing && editedTask ? (
+          {isEditing[task._id] && editedTask ? (
               <div>
               <h3 className="text-xl font-bold mb-2">Editing Task: {task.title}</h3>
               <div className="mb-2">
@@ -166,6 +166,7 @@ const TaskList = ({todos}) => {
         </div>
       ))
     ) : (
+      
       <p>No tasks available</p>
     )}
   </div>
