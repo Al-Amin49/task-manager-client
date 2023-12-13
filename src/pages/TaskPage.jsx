@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import TaskForm from "../assets/components/TaskForm";
 import TaskList from "../assets/components/TaskList";
 

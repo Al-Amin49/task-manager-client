@@ -83,7 +83,7 @@ const TaskList = () => {
     {Array.isArray(tasks) ? (
       tasks.map((task) => (
         <div key={task._id} className="border p-4 my-2 rounded-md">
-          {editedTask === task ? (
+          {isEditing && editedTask ? (
               <div>
               <h3 className="text-xl font-bold mb-2">Editing Task: {task.title}</h3>
               <div className="mb-2">
