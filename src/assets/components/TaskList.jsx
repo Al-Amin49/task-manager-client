@@ -135,7 +135,7 @@ const TaskList = ({ todos }) => {
                   <label className="block text-sm font-medium text-gray-700">
                     Description
                   </label>
-                  <input
+                  <textarea
                     type="text"
                     value={editedTask.description}
                     onChange={(e) =>

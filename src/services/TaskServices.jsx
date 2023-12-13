@@ -1,7 +1,7 @@
 import createAxiosInstance from "../utils/axios";
 
 
-const baseURL = 'http://localhost:8000/';
+const baseURL = 'https://task-manager-03jm.onrender.com/';
 const api = createAxiosInstance(baseURL);
 
 const taskServices =  {
