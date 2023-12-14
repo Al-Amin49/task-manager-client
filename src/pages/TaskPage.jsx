@@ -13,7 +13,7 @@ const TaskPage = () => {
     return (
         <div className="max-w-screen-lg  mx-auto ">
              <h3 className="text-center my-8 text-3xl text-green-500 font-medium"> Your Daily deed starts here 🌟</h3>
-           <div className="flex flex-col items-center md:flex-row md:justify-between">
+           <div className="flex flex-col items-baseline md:flex-row md:justify-between">
            <TaskForm onAddTask={handleAddTask}/>
            <TaskList todos={todos} />
            

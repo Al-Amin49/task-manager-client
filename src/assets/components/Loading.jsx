@@ -1,8 +1,8 @@
 const Loading = () => {
   return (
     <>
-      <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin rounded-full border-t-4 border-blue-500 border-solid border-8 h-16 w-16"></div>
+      <div className="flex items-center justify-center">
+        <div className="animate-spin rounded-full border-t-2 border-x-green-800 border-solid border-4 h-16 w-16"></div>
       </div>
     </>
   );

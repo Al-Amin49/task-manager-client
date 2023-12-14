@@ -1,6 +1,7 @@
 import { useState } from "react";
 import taskServices from "../../services/TaskServices";
 import toast from "react-hot-toast";
+import Loading from "./Loading";
 
 
 
@@ -45,8 +46,8 @@ const TaskForm = ({onAddTask}) => {
 
     return (
       <div>
-      
-        <div className="bg-green-200 p-4">
+       {loading ? <Loading/> :''}
+        <div className="bg-green-200 p-4 mt-2">
         <form onSubmit={handleAddTask} className="w-full max-w-lg">
           <div className="flex flex-wrap -mx-3 mb-6">
             <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
