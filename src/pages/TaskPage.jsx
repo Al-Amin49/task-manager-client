@@ -1,6 +1,6 @@
 import { useState } from "react";
-import TaskForm from "../assets/components/TaskForm";
-import TaskList from "../assets/components/TaskList";
+import TaskForm from "../components/TaskForm";
+import TaskList from "../components/TaskList";
 
 
 const TaskPage = () => {
